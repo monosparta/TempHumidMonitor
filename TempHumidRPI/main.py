@@ -1,41 +1,45 @@
+from pyclbr import Class
 import time
 import Adafruit_DHT
 import LCD_drive as driver
 import mqtt_publish
+import os
+import json
 
-# MQTT設定
-mqtt_data = {
-    "account": "demo",
-    "password": "demo0712",
-    "ip": "192.168.168.113",
-    "port": 1883,
-    "time": 60,
-    "topic": "THP/DATA"
-}
 
-# GPIO設定
-gpio_pin = {
-    "DHT11": 4,
-}
+def read_json() -> dict:
+    try:
 
-# 建立LCD物件
-mylcd = driver.lcd()
+        with open("config.json") as f:
+            return json.loads(f.read())
 
-# 建立MQTT物件
-mqtt_publish = mqtt_publish.MQTT(
-    mqtt_data["account"],
-    mqtt_data["password"],
-    mqtt_data["ip"],
-    mqtt_data["topic"],
-)
+    except FileNotFoundError:
+        raise FileNotFoundError("Couldn't find a setting.json file containing mqtt and gpio settings!")
+
+
+def connect_to_mqtt(data) -> Class:
+    return mqtt_publish.MQTT(
+        data["mqtt"]["username"],
+        data["mqtt"]["password"],
+        data["mqtt"]["host"],
+        data["mqtt"]["topic"],
+    )
 
 
 def main() -> None:
+
+    data = read_json()
+
+    mqtt_publisher = connect_to_mqtt(data)
+
+    # 建立LCD物件
+    mylcd = driver.lcd()
+
     print('按下 Ctrl-C 可停止程式')
     mylcd.lcd_display_string("Loading.")
-    time.sleep(0.1)
+    time.sleep(0.3)
     mylcd.lcd_display_string("Loading..")
-    time.sleep(0.1)
+    time.sleep(0.3)
     mylcd.lcd_display_string("Loading...")
 
     # 等待0.5秒
@@ -44,7 +48,7 @@ def main() -> None:
     try:
         while True:
             # 偵測溫溼度資料
-            h, t = Adafruit_DHT.read_retry(Adafruit_DHT.DHT11, gpio_pin["DHT11"])
+            h, t = Adafruit_DHT.read_retry(Adafruit_DHT.DHT11, data['gpio']["DHT11"])
 
             # 判斷資料是否為None型別
             if h is not None and t is not None:
@@ -58,11 +62,11 @@ def main() -> None:
                 mylcd.lcd_display_string(F"Humid: {h:0.1f}  %", 2)
 
                 # 發送mqtt資料
-                mqtt_publish.send_message(temperature=t, humidity=h)
+                mqtt_publisher.send_message(temperature=t, humidity=h)
             else:
                 print('讀取失敗，重新讀取。')
 
-            time.sleep(5)
+            time.sleep(data['interval'])
 
     except KeyboardInterrupt:
         print('關閉程式')

@@ -1,0 +1,14 @@
+{
+    "mqtt": {
+        "host": "localhost",
+        "port": "1883",
+        "topic": "THP/DATA",
+        "username": "",
+        "password": ""
+    },
+
+    "gpio": {
+        "DHT11": "4"
+    },
+    "interval": 5
+}
