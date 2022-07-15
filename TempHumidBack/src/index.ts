@@ -3,6 +3,7 @@ import { Mosquitto } from "./Components/Mosquitto";
 import { OnMessageCallback } from "mqtt";
 import { Config } from "./Core/Config";
 import { Socket } from "./Components/Socket";
+import { ExpressServer } from "./Components/ExpressServer";
 
 export class Core {
     private _db = new SqliteDatabase('data.sqlite')
@@ -26,6 +27,9 @@ export class Core {
 
         // set up websocket
         new Socket(this);
+
+        // set up express
+        new ExpressServer(this);
     }
 
     public get mqtt() {
