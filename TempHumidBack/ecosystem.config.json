@@ -1,0 +1,10 @@
+{
+    "apps": [{
+        "name": "TempHumidBack",
+        "script": "./dist",
+        "instances": "1",
+        "wait_ready": true,
+        "autorestart": true,
+        "max_restarts": 5
+    }]
+}
