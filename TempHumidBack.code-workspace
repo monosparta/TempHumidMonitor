@@ -7,5 +7,11 @@
 			"path": "TempHumidRPI"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"conventionalCommits.scopes": [
+			"Workspace",
+			"RPI",
+			"Backend"
+		]
+	}
 }
