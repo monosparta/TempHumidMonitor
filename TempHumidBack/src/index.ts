@@ -2,6 +2,7 @@ import { SqliteDatabase } from "./Components/SqliteDatabase";
 import { Mosquitto } from "./Components/Mosquitto";
 import { OnMessageCallback } from "mqtt";
 import { Config } from "./Core/Config";
+import { Socket } from "./Components/Socket";
 
 export class Core {
     private _db = new SqliteDatabase('data.sqlite')
@@ -22,6 +23,9 @@ export class Core {
 
         // set up mqtt
         this._mqtt = new Mosquitto(this.config.mqtt.host, onMqttConnected, this.config.mqtt.username, this.config.mqtt.password);
+
+        // set up websocket
+        new Socket(this);
     }
 
     public get mqtt() {
