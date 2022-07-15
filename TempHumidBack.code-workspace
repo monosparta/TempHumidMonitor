@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "TempHumidBack"
+		},
+		{
+			"path": "TempHumidRPI"
+		}
+	],
+	"settings": {}
+}
