@@ -10,6 +10,9 @@ export class Core {
     private _mqtt: Mosquitto;
     private _config = new Config();
 
+    /**
+     * App Core
+     */
     constructor() {
         // init database
         this._db = new SqliteDatabase(this.config.db.file);
@@ -35,14 +38,23 @@ export class Core {
         new ExpressServer(this);
     }
 
+    /**
+     * MQTT Client
+     */
     public get mqtt() {
         return this._mqtt;
     }
 
+    /**
+     * App CConfig
+     */
     public get config() {
         return this._config;
     }
 
+    /**
+     * SQLite3 Client
+     */
     public get db() {
         return this._db;
     }

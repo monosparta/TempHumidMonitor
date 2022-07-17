@@ -1,7 +1,7 @@
 import { Server } from "socket.io";
 import { Core } from "..";
 
-// Declared in https://socket.io/docs/v4/typescript/
+// Type Declared in https://socket.io/docs/v4/typescript/
 interface ServerToClientEvents {
     update: any;
 }
@@ -22,11 +22,16 @@ interface SocketData {
 export class Socket {
     private readonly io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>();
 
+    /**
+     * Socket.io Server
+     * @param core App Core Instance
+     */
     constructor(core: Core) {
+        // On client connected to server via websocket
         this.io.on('connection', socket => {
             socket.on('disconnect', () => { });
 
-            // mqtt to ws
+            // Send mqtt message to websocket
             core.mqtt.subscribe(core.config.mqtt.topic, (_, payload) => {
                 const data = JSON.parse(payload.toString());
                 socket.emit("update", { temp: data.Temperature, humid: data.Humidity, time: data.Time });

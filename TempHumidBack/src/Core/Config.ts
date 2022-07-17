@@ -5,6 +5,9 @@ export class Config{
     private _web: { port: number };
     private _db: { file: string };
 
+    /**
+     * Config Core
+     */
     constructor() {
         console.log('Reading config...');
 
@@ -45,6 +48,9 @@ export class Config{
         }
     }
 
+    /**
+     * Write to Config File
+     */
     private write() {
         const json = JSON.stringify({
             mqtt: this._mqtt,
@@ -53,14 +59,23 @@ export class Config{
         writeFileSync('./config.json', json, 'utf8');
     }
 
+    /**
+     * MQTT Config
+     */
     public get mqtt() {
         return this._mqtt;
     }
 
+    /**
+     * Web Config
+     */
     public get web() {
         return this._web;
     }
 
+    /**
+     * Database Config
+     */
     public get db() {
         return this._db;
     }
