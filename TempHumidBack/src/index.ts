@@ -6,11 +6,14 @@ import { Socket } from "./Components/Socket";
 import { ExpressServer } from "./Components/ExpressServer";
 
 export class Core {
-    private _db = new SqliteDatabase('data.sqlite')
+    private _db: SqliteDatabase;
     private _mqtt: Mosquitto;
     private _config = new Config();
 
     constructor() {
+        // init database
+        this._db = new SqliteDatabase(this.config.db.file);
+
         // save to database
         const onMqttMessage: OnMessageCallback = (_, payload) => {
             const data = JSON.parse(payload.toString());

@@ -3,12 +3,14 @@ import { existsSync, readFileSync, writeFileSync } from 'fs';
 export class Config{
     private _mqtt: { host: string, topic: string, username: string | undefined, password: string | undefined };
     private _web: { port: number };
+    private _db: { file: string };
 
     constructor() {
         console.log('Reading config...');
 
         const mqttDefault = { host: 'mqtt://localhost:1883', topic: 'THP/DATA', username: '', password: '' };
         const webDefault = { port: 80 };
+        const dbDefault = { file: 'data.sqlite' };
 
         if (existsSync('./config.json')) {
             const config = JSON.parse(readFileSync('config.json', { encoding: 'utf-8' }));
@@ -25,6 +27,11 @@ export class Config{
             if (!config.web) config.web = {};
             this._web = {
                 port: (config.web.port) ? config.web.port : webDefault.port
+            }
+
+            if (!config.db) config.db = {};
+            this._db = {
+                file: (config.db.file) ? config.db.file : dbDefault.file
             }
 
             // sync config file
@@ -52,5 +59,9 @@ export class Config{
 
     public get web() {
         return this._web;
+    }
+
+    public get db() {
+        return this._db;
     }
 }
