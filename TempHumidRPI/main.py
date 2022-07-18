@@ -59,7 +59,7 @@ def main() -> None:
                 gpio.output(data["gpio"]["green_led"], True)
 
                 # 顯示溫溼度資料
-                print(F'溫度={envir_data.temperature:0.1f}{chr(223)}C 濕度={envir_data.humidity:0.1f}%')
+                print(F'溫度={envir_data.temperature:0.1f}°C 濕度={envir_data.humidity:0.1f}%')
 
                 # LCD第一行顯示溫度
                 mylcd.lcd_display_string(F" Temp: {envir_data.temperature:0.1f} {chr(223)}C", 1, clean=True)
