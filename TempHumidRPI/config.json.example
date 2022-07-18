@@ -8,7 +8,8 @@
     },
 
     "gpio": {
-        "DHT11": "4"
+        "DHT11":    7,
+        "green_led": 11
     },
     "interval": 5
 }
