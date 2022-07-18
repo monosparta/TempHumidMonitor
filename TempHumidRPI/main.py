@@ -10,7 +10,7 @@ import RPi.GPIO as gpio
 # read the json file
 def read_json() -> dict:
     try:
-        with open("temp_humid_project/TempHumidRPI/config.json") as f:
+        with open("/config.json") as f:
             return json.loads(f.read())
     except FileNotFoundError:
         raise FileNotFoundError("Couldn't find a setting.json file containing mqtt and gpio settings!")
@@ -52,7 +52,7 @@ def main() -> None:
     try:
         while True:
             # 偵測溫溼度資料
-            envir_data = dht11.DHT11(pin=7).read()
+            envir_data = dht11.DHT11(pin=data['gpio']["DHT11"]).read()
 
             # 判斷資料是否為None型別
             if envir_data.temperature or envir_data.humidity != 0:
