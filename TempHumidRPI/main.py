@@ -10,7 +10,7 @@ import RPi.GPIO as gpio
 # read the json file
 def read_json() -> dict:
     try:
-        with open("/config.json") as f:
+        with open("./config.json") as f:
             return json.loads(f.read())
     except FileNotFoundError:
         raise FileNotFoundError("Couldn't find a setting.json file containing mqtt and gpio settings!")
