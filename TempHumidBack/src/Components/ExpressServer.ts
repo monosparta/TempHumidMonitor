@@ -14,11 +14,15 @@ export class ExpressServer
     constructor(core: Core) {
         // Get data from last 24 hours and average by hour
         this.app.get('/api/getLast24Hours', (req, res) => {
-            core.db.getHourAvgDataFromTime(new Date(Date.now() - 24 * 60 * 60 * 1000), (err, row) => {
-                res.json(row.map((value) => {
-                    return { day: parseInt(value.day), hour: parseInt(value.hour), temp: value.temp, humid: value.humid }
-                }));
-            })
+            const now = new Date();
+            core.db.getHourAvgDataFromTime(
+                new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1, now.getHours() + 1, 0, 0),
+                (err, row) => {
+                    res.json(row.map((value) => {
+                        return { day: parseInt(value.day), hour: parseInt(value.hour), temp: value.temp, humid: value.humid }
+                    }));
+                }
+            );
         })
 
         // Start listening
