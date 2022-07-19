@@ -42,7 +42,7 @@ export class SqliteDatabase{
      * @param callback Data callback
      */
     public getHourAvgDataFromTime(time: Date, callback: (err: Error | null, row: any[]) => void ) {
-        const sqlString = "select avg(temp) as temp, avg(humid) as humid, strftime('%d', time) as day, strftime('%H', time) as hour from ENVDATA where datetime(time) >= datetime(?) group by strftime('%H', time)";
+        const sqlString = "select avg(temp) as temp, avg(humid) as humid, strftime('%d', time) as day, strftime('%H', time) as hour from ENVDATA where datetime(time) >= datetime(?) group by strftime('%Y %m %d %H', time) order by day, hour";
         const timeString = time.toISOString().
             replace(/T/, ' ').    // replace T with a space
             replace(/\..+/, '')   // delete the dot and everything after

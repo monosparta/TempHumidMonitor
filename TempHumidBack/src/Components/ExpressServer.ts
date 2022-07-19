@@ -16,7 +16,7 @@ export class ExpressServer
         this.app.get('/api/getLast24Hours', (req, res) => {
             core.db.getHourAvgDataFromTime(new Date(Date.now() - 24 * 60 * 60 * 1000), (err, row) => {
                 res.json(row.map((value) => {
-                    return { hour: parseInt(value.hour), temp: value.temp, humid: value.humid }
+                    return { day: parseInt(value.day), hour: parseInt(value.hour), temp: value.temp, humid: value.humid }
                 }));
             })
         })
