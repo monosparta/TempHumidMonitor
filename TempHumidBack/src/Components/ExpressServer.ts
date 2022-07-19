@@ -1,9 +1,11 @@
 import express from 'express';
 import { Core } from '..';
+import { createServer } from 'http'
 
 export class ExpressServer
 {
     private app = express();
+    private _server = createServer(this.app)
 
     /**
      * Express.js Server
@@ -20,8 +22,15 @@ export class ExpressServer
         })
 
         // Start listening
-        this.app.listen(core.config.web.port, () => {
+        this.server.listen(core.config.web.port, () => {
             console.log(`Listening on port ${core.config.web.port}`);
         })
+    }
+
+    /**
+     * http server
+     */
+    public get server() {
+        return this._server;
     }
 }

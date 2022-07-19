@@ -20,13 +20,14 @@ interface SocketData {
 }
 
 export class Socket {
-    private readonly io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>();
+    private readonly io: Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>;
 
     /**
      * Socket.io Server
      * @param core App Core Instance
      */
     constructor(core: Core) {
+        this.io = new Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(core.server.server);
         // On client connected to server via websocket
         this.io.on('connection', socket => {
             socket.on('disconnect', () => { });

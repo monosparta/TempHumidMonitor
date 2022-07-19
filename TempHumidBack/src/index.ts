@@ -9,6 +9,7 @@ export class Core {
     private _db: SqliteDatabase;
     private _mqtt: Mosquitto;
     private _config = new Config();
+    private _server: ExpressServer;
 
     /**
      * App Core
@@ -31,11 +32,11 @@ export class Core {
         // set up mqtt
         this._mqtt = new Mosquitto(this.config.mqtt.host, onMqttConnected, this.config.mqtt.username, this.config.mqtt.password);
 
+        // set up express
+        this._server = new ExpressServer(this);
+
         // set up websocket
         new Socket(this);
-
-        // set up express
-        new ExpressServer(this);
     }
 
     /**
@@ -57,6 +58,13 @@ export class Core {
      */
     public get db() {
         return this._db;
+    }
+
+    /**
+     * Http Client
+     */
+    public get server() {
+        return this._server;
     }
 }
 
