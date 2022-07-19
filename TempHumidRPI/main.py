@@ -69,10 +69,12 @@ def main() -> None:
 
                 # 發送mqtt資料
                 mqtt_publisher.send_message(temperature=envir_data.temperature, humidity=envir_data.humidity)
+
+                time.sleep(data['interval'])
             else:
                 print('讀取失敗，重新讀取。')
 
-            time.sleep(data['interval'])
+                time.sleep(1)
 
     except KeyboardInterrupt:
         print('關閉程式')
