@@ -55,6 +55,11 @@ export class SqliteDatabase{
         return this.getAverageData(rawData);
     }
 
+
+    /**
+     * Group and calculate average by hour
+     * @param data Rawdata got from dao
+     */
     private getAverageData(data: EnvData[]) {
         const dataGroup: { [key: string]: EnvData[] } = {};
         for (const x of data) {
