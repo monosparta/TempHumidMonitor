@@ -1,18 +1,21 @@
-import { Database } from 'sqlite3';
-
+import { SqlDatabase, BaseDAO } from 'sqlite3orm';
+import { EnvData } from '../Models/EnvData';
 
 export class SqliteDatabase{
-    private readonly db: Database;
+    private readonly db: SqlDatabase;
+    private dataDAO :BaseDAO<EnvData> | undefined = undefined;
 
     /**
      * Setup SQLite3 client
      * @param file Database file
      */
-    constructor(file: string) {
-        this.db = new Database(file);
+    constructor(file: string) { 
+        this.db = new SqlDatabase();
+        this.db.open(file).then(() => {
+            this.dataDAO = new BaseDAO(EnvData, this.db);
 
-        // create table
-        this.db.exec('create table if not exists ENVDATA(id integer PRIMARY KEY, temp num, humid num, time TEXT)');
+            this.dataDAO.createTable();
+        })
     }
 
     /**
@@ -21,19 +24,15 @@ export class SqliteDatabase{
      * @param humid Humidity
      * @param time Time, formatted with 'YYYY-MM-DD HH:MM:SS.SSS'
      */
-    public insert(temp: number, humid: number, time: string) {
-        // get last record
-        this.db.get('select max(id) from ENVDATA', (err, row) => {
-            if (err) {
-                console.error(`Error: ${err.message}`);
-                return;
-            }
+    public async insert(temp: number, humid: number, time: string) {
+        if (this.dataDAO === undefined) throw new Error("Database not initialized");
 
-            const id = row.id +1;
-            
-            // insert data
-            this.db.run('insert into ENVDATA values(?, ?, ?, ?)', [id, temp, humid, time]);
-        });
+        const data = new EnvData();
+        data.temp = temp;
+        data.humid = humid;
+        data.time = new Date(Date.parse(time));
+
+        await this.dataDAO.insert(data);
     }
 
     /**
@@ -41,20 +40,45 @@ export class SqliteDatabase{
      * @param time From Date
      * @param callback Data callback
      */
-    public getHourAvgDataFromTime(time: Date, callback: (err: Error | null, row: any[]) => void ) {
-        const sqlString = "select avg(temp) as temp, avg(humid) as humid, strftime('%d', time) as day, strftime('%H', time) as hour from ENVDATA where datetime(time) >= datetime(?) group by strftime('%Y %m %d %H', time) order by day, hour";
+    public async getHourAvgDataFromTime(time: Date) {
+        if (this.dataDAO === undefined) throw new Error("Database not initialized");
+
         const timeString = new Date(time.valueOf() - time.getTimezoneOffset() * 60 * 1000).toISOString().
             replace(/T/, ' ').    // replace T with a space
             replace(/\..+/, '')   // delete the dot and everything after
 
-        this.db.all(sqlString, [timeString], callback);
+        const rawData = await this.dataDAO.selectAll({
+            select: { temp: true, humid: true, time: true },
+            where: "where datetime(time) >= datetime($0)"
+        }, { '$0': timeString })
+        
+        return this.getAverageData(rawData);
     }
 
-    /**
-     * Get all data
-     * @param callback Data callback
-     */
-    public getAll(callback: (err: Error | null, row: any[]) => void) {
-        this.db.all('select * from ENVDATA', callback);
+    private getAverageData(data: EnvData[]) {
+        const dataGroup: { [key: string]: EnvData[] } = {};
+        for (const x of data) {
+            const key = `${x.time.getFullYear()}-${x.time.getMonth()}-${x.time.getDate()}-${x.time.getHours()}`;
+            if (dataGroup[key] === undefined) {
+                dataGroup[key] = [x]
+            } else {
+                dataGroup[key].push(x)
+            }
+        }
+        const calculatedGroup: { temp: number, humid: number, hour: number, day: number }[] = [];
+
+        for (const x of Object.keys(dataGroup)) {
+            if (dataGroup[x] === undefined) continue;
+            
+            // Calculate average for each group
+            calculatedGroup.push({
+                temp: dataGroup[x].map(x => x.temp).reduce((a, b) => a + b) / dataGroup[x].length,
+                humid: dataGroup[x].map(x => x.humid).reduce((a, b) => a + b) / dataGroup[x].length,
+                day: dataGroup[x][0].time.getDate(),
+                hour: dataGroup[x][0].time.getHours()
+            })
+        }
+
+        return calculatedGroup.sort((a, b) => a.day - b.day || a.hour - b.hour);
     }
 }
