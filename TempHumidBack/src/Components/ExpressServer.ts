@@ -13,7 +13,7 @@ export class ExpressServer
      * @param core App Core Instance
      */
     constructor(core: Core) {
-        const allowedOrigins = ['http://localhost/', 'http://192.168.168.113', 'http://mono202207-temp-humid.herokuapp.com/']
+        const allowedOrigins = ['http://localhost:3000/', 'http://192.168.168.113', 'http://mono202207-temp-humid.herokuapp.com/']
         this.app.use(cors({
             origin: function (origin, callback) {
                 // allow requests with no origin 
