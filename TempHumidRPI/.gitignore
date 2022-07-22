@@ -1,3 +1,7 @@
+
+# SonarQube
+.scannerwork
+
 .venv
 config.json
 __pycache__/

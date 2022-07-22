@@ -126,6 +126,9 @@ dist
 .yarn/build-state.yml
 .pnp.*
 
+# SonarQube
+.scannerwork
+
 # project
 *.sqlite
 config.json
