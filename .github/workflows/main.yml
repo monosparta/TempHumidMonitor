@@ -8,15 +8,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: "./TempHumidFront"
     steps:
     - uses: actions/checkout@v3
     - name: npm install and build webpack
-      working-directory: ./TempHumidFront
       run: |
         npm install
         npm run build
     - uses: actions/upload-artifact@main
-      working-directory: ./TempHumidFront
       with:
         name: webpack artifacts
         path: build/
@@ -29,7 +31,6 @@ jobs:
           name: webpack artifacts
           path: build/
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
-        working-directory: ./TempHumidFront/build
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{secrets.HEROKU_APP_NAME}} #Must be unique in Heroku
