@@ -17,12 +17,9 @@ export class ExpressServer
             const now = new Date();
             core.db.getHourAvgDataFromTime(
                 new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1, now.getHours() + 1, 0, 0),
-                (err, row) => {
-                    res.json(row.map((value) => {
-                        return { day: parseInt(value.day), hour: parseInt(value.hour), temp: value.temp, humid: value.humid }
-                    }));
-                }
-            );
+            ).then(value => {
+                res.json(value);
+            });
         })
 
         // Start listening
