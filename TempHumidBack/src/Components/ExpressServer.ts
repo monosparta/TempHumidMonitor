@@ -13,20 +13,17 @@ export class ExpressServer
      * @param core App Core Instance
      */
     constructor(core: Core) {
-        const allowedOrigins = ['http://localhost:3000/', 'http://192.168.168.113', 'http://mono202207-temp-humid.herokuapp.com/']
-        this.app.use(cors({
-            origin: function (origin, callback) {
-                // allow requests with no origin 
-                // (like mobile apps or curl requests)
-                if (!origin) return callback(null, true);
-                if (allowedOrigins.indexOf(origin) === -1) {
-                    const msg = 'The CORS policy for this site does not ' +
-                        'allow access from the specified Origin.';
-                    return callback(new Error(msg), false);
-                }
-                return callback(null, true);
+        const allowedOrigins = ['http://localhost:3000', 'http://192.168.168.113', 'http://mono202207-temp-humid.herokuapp.com']
+        this.app.use(cors(function (req, callback) {
+            const origin = req.header('Origin') || ''
+            let corsOptions;
+            if (allowedOrigins.indexOf(origin) !== -1) {
+                corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+            } else {
+                corsOptions = { origin: false } // disable CORS for this request
             }
-        }))
+            callback(null, corsOptions) // callback expects two parameters: error and options
+        }));
         
         // Get data from last 24 hours and average by hour
         this.app.get('/api/getLast24Hours', (req, res) => {
