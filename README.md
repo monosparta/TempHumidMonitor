@@ -2,7 +2,7 @@
 
 <!-- 前端和物理照 -->
 ![](https://i.imgur.com/WHiYFPo.png)
-![](https://i.imgur.com/zCCYpum.jpg)
+![](https://i.imgur.com/6E0oicH.jpg)
 
 
 ## 前端
@@ -39,7 +39,7 @@
 - 透過 Socket.io 連線傳送即時溫濕度資料到前端
 
 ## 程式流程
-![](https://i.imgur.com/PgZ6G8O.png)
+![](https://i.imgur.com/QubuvwO.png)
 - 啟動樹莓派，PM2 自動啟動主程式，並啟動 Nginx 代理網頁和 API
 - 主程式啟動，紅燈亮起，閃爍綠燈執行緒啟動
 - 開始驅動 DHT11 感測資料
