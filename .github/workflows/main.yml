@@ -21,7 +21,7 @@ jobs:
     - uses: actions/upload-artifact@main
       with:
         name: webpack artifacts
-        path: build/
+        path: "./TempHumidFront/build/"
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -29,7 +29,7 @@ jobs:
       - uses: actions/download-artifact@main
         with: 
           name: webpack artifacts
-          path: build/
+          path: "./TempHumidFront/build/"
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
