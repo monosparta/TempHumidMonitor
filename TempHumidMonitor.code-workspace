@@ -11,7 +11,8 @@
 		"conventionalCommits.scopes": [
 			"Workspace",
 			"RPI",
-			"Backend"
+			"Backend",
+			"Front"
 		]
 	}
 }
