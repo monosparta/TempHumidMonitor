@@ -12,9 +12,14 @@ export class ExpressServer
      * @param core App Core Instance
      */
     constructor(core: Core) {
+        this.app.use(function (req, res, next) {
+            res.header("Access-Control-Allow-Origin", ['http://localhost/', 'http://192.168.168.113', 'http://mono202207-temp-humid.herokuapp.com/']); // update to match the domain you will make the request from
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            next();
+        });
+        
         // Get data from last 24 hours and average by hour
         this.app.get('/api/getLast24Hours', (req, res) => {
-            res.set('Access-Control-Allow-Origin', ['http://localhost/', 'http://192.168.168.113', 'http://mono202207-temp-humid.herokuapp.com/']);
             const now = new Date();
             core.db.getHourAvgDataFromTime(
                 new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1, now.getHours() + 1, 0, 0),
