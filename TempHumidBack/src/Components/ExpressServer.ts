@@ -14,16 +14,7 @@ export class ExpressServer
      */
     constructor(core: Core) {
         const allowedOrigins = ['http://localhost:3000', 'http://192.168.168.113', 'http://mono202207-temp-humid.herokuapp.com']
-        this.app.use(cors(function (req, callback) {
-            const origin = req.header('Origin') || ''
-            let corsOptions;
-            if (allowedOrigins.indexOf(origin) !== -1) {
-                corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
-            } else {
-                corsOptions = { origin: false } // disable CORS for this request
-            }
-            callback(null, corsOptions) // callback expects two parameters: error and options
-        }));
+        this.app.use(cors({ origin: allowedOrigins }));
         
         // Get data from last 24 hours and average by hour
         this.app.get('/api/getLast24Hours', (req, res) => {
