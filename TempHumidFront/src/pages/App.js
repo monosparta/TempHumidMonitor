@@ -28,9 +28,8 @@ function App() {
   };
 
   useEffect(() => {
-    console.log(window.location.hostname);
     setWs(
-      webSocket(`http://192.168.168.113`, {
+      webSocket(process.env.REACT_APP_API_URL, {
         transports: ["websocket"],
       })
     );
