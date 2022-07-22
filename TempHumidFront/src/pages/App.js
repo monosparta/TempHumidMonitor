@@ -18,6 +18,7 @@ function App() {
       console.log("success connect!");
       initWebSocket();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ws]);
 
   const initWebSocket = () => {
