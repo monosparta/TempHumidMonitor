@@ -29,7 +29,7 @@ function App() {
   useEffect(() => {
     console.log(window.location.hostname);
     setWs(
-      webSocket(`http://${window.location.hostname}`, {
+      webSocket(`http://192.168.168.113`, {
         transports: ["websocket"],
       })
     );

@@ -16,7 +16,7 @@ export default function App() {
   const [data, setData] = React.useState([]);
   //連接api 抓資料
   function interval() {
-    var dataUrl = "api/getLast24Hours";
+    var dataUrl = "http://192.168.168.113/api/getLast24Hours";
     fetch(dataUrl, { method: "GET" })
       .then((res) => res.json())
       .then((data) => {
