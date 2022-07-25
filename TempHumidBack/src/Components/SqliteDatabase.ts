@@ -43,9 +43,7 @@ export class SqliteDatabase{
     public async getHourAvgDataFromTime(time: Date) {
         if (this.dataDAO === undefined) throw new Error("Database not initialized");
 
-        const timeString = new Date(time.valueOf() - time.getTimezoneOffset() * 60 * 1000).toISOString().
-            replace(/T/, ' ').    // replace T with a space
-            replace(/\..+/, '')   // delete the dot and everything after
+        const timeString = time.toISOString();
 
         const rawData = await this.dataDAO.selectAll({
             select: { temp: true, humid: true, time: true },
